@@ -6,6 +6,10 @@
     <title>Petal - Premium Plant Store</title>
     <link rel="stylesheet" href="./styles/output.css" />
     <style>
+<<<<<<< HEAD
+      
+=======
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
       /* --- Pinterest Masonry Layout --- */
       .masonry-grid {
         column-count: 2;
@@ -104,7 +108,11 @@
   </head>
   <body>
     <nav
+<<<<<<< HEAD
+      class="sticky top-0 z-100 border-b border-white/5 bg-black/80 backdrop-blur-xl px-6 py-4"
+=======
       class="sticky top-0 z-[100] border-b border-white/5 bg-black/80 backdrop-blur-xl px-6 py-4"
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
     >
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-2 cursor-pointer">
@@ -113,7 +121,17 @@
             >Petal</span
           >
         </div>
+<<<<<<< HEAD
+        <div class="flex items-center gap-4">
+          <button
+            id="user-btn"
+            class="p-3 hover:bg-white/5 rounded-full transition"
+          >
+            <i data-lucide="user" class="w-6 h-6"></i>
+          </button>
+=======
         <div class="flex items-center gap-x-8">
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
           <button
             id="cart-btn"
             class="relative p-3 hover:bg-white/5 rounded-full transition"
@@ -121,11 +139,18 @@
             <i data-lucide="shopping-basket" class="w-6 h-6"></i>
             <span
               id="cart-count"
+<<<<<<< HEAD
+              class="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center"
+              >0</span
+            >
+          </button>
+=======
               class="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center hidden"
               >0</span
             >
           </button>
           <div id="auth-button"></div>
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
         </div>
       </div>
     </nav>
@@ -272,7 +297,11 @@
 
     <div
       id="toast"
+<<<<<<< HEAD
+      class="fixed bottom-8 right-8 z-2000 translate-y-20 opacity-0 transition-all duration-500"
+=======
       class="fixed bottom-8 right-8 z-[2000] translate-y-20 opacity-0 transition-all duration-500"
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
     >
       <div
         class="bg-white text-black px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 font-bold"
@@ -283,7 +312,11 @@
 
     <script src="./node_modules/lucide/dist/umd/lucide.js"></script>
     <script>
+<<<<<<< HEAD
+      const plants = JSON.parse(localStorage.getItem("petalPlants")) || [];
+=======
       const plants = [];
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
       const plantTypes = [
         "Monstera",
         "Snake Plant",
@@ -296,6 +329,18 @@
       ];
       const cats = ["indoor", "succulents", "flowering"];
 
+<<<<<<< HEAD
+      // Generate 54 plants if not loaded from storage
+      if (plants.length === 0) {
+        for (let i = 1; i <= 54; i++) {
+          plants.push({
+            id: i,
+            name: `${plantTypes[i % plantTypes.length]} #${i}`,
+            category: cats[i % cats.length],
+            price: Math.floor(Math.random() * (600000 - 80000) + 80000),
+            description:
+              "This premium plant is carefully selected \
+=======
       // Generate 54 plants matching your image sequence
       for (let i = 1; i <= 54; i++) {
         plants.push({
@@ -305,6 +350,7 @@
           price: Math.floor(Math.random() * (600000 - 80000) + 80000),
           description:
             "This premium plant is carefully selected \
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
            to bring natural elegance and freshness into any space. \
            Known for its balanced growth and visual appeal, it thrives \
            in well-maintained indoor or outdoor environments. \
@@ -313,6 +359,27 @@
              Ideal for homes, offices, and creative spaces, \
               this plant is a timeless addition for both new \
                and experienced plant enthusiasts.",
+<<<<<<< HEAD
+            image:
+              i === 1
+                ? "./assets/image_assets/Best wallpaper.jpg"
+                : `./assets/image_assets/download (${30 + (i % 24)}).jpg`,
+          });
+        }
+        localStorage.setItem("petalPlants", JSON.stringify(plants));
+      }
+
+      let cart = [];
+      let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      let users = JSON.parse(localStorage.getItem("petalUsers")) || [];
+
+      // Load user's cart or global cart if no user
+      if (currentUser) {
+        cart = currentUser.cart || [];
+      } else {
+        cart = JSON.parse(localStorage.getItem("plantCart")) || [];
+      }
+=======
           image:
             i === 1
               ? "./assets/image_assets/Best wallpaper.jpg"
@@ -321,6 +388,7 @@
       }
 
       let cart = JSON.parse(localStorage.getItem("plantCart")) || [];
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
       let productCategory = document.getElementById("product-category");
       let productName = document.getElementById("product-name");
       let productPrice = document.getElementById("product-price");
@@ -405,7 +473,24 @@
         const item = cart.find((x) => x.id === id);
         if (item) item.quantity++;
         else cart.push({ ...p, quantity: 1 });
+<<<<<<< HEAD
+        
+        // Save cart
+        if (currentUser) {
+          currentUser.cart = cart;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          const userIndex = users.findIndex(u => u.id === currentUser.id);
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+            localStorage.setItem("petalUsers", JSON.stringify(users));
+          }
+        } else {
+          localStorage.setItem("plantCart", JSON.stringify(cart));
+        }
+        
+=======
         localStorage.setItem("plantCart", JSON.stringify(cart));
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
         updateUI();
         showToast(`Added ${p.name}`);
       };
@@ -414,7 +499,24 @@
         const i = cart.find((x) => x.id === id);
         i.quantity += delta;
         if (i.quantity <= 0) cart = cart.filter((x) => x.id !== id);
+<<<<<<< HEAD
+        
+        // Save cart
+        if (currentUser) {
+          currentUser.cart = cart;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          const userIndex = users.findIndex(u => u.id === currentUser.id);
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+            localStorage.setItem("petalUsers", JSON.stringify(users));
+          }
+        } else {
+          localStorage.setItem("plantCart", JSON.stringify(cart));
+        }
+        
+=======
         localStorage.setItem("plantCart", JSON.stringify(cart));
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
         updateUI();
       };
 
@@ -444,6 +546,11 @@
                 <p class="font-bold text-sm">${i.name}</p>
                 <p class="text-green-500 text-sm">Rp ${i.price.toLocaleString()}</p>
                 <div class="flex gap-4 mt-2">
+<<<<<<< HEAD
+                    <button class="cursor-pointer" onclick="updateQty(${i.id}, -1)">-</button>
+                    <span>${i.quantity}</span>
+                    <button class="cursor-pointer" onclick="updateQty(${i.id}, 1)">+</button>
+=======
                     <button class="cursor-pointer" onclick="updateQty(${
                       i.id
                     }, -1)">-</button>
@@ -451,12 +558,18 @@
                     <button class="cursor-pointer" onclick="updateQty(${
                       i.id
                     }, 1)">+</button>
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
                   </div>
                 </div>
                 <div>
                   <button class="cursor-pointer"  onclick='removeFromCart(${
+<<<<<<< HEAD
+                  i.id
+                })'>
+=======
                     i.id
                   })'>
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
                 <i data-lucide='trash' class="text-red-600"></i>
               </button>
             </div>
@@ -476,7 +589,24 @@
         cart = cart.filter((element) => {
           return element.id !== id;
         });
+<<<<<<< HEAD
+        
+        // Save cart
+        if (currentUser) {
+          currentUser.cart = cart;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          const userIndex = users.findIndex(u => u.id === currentUser.id);
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+            localStorage.setItem("petalUsers", JSON.stringify(users));
+          }
+        } else {
+          localStorage.setItem("plantCart", JSON.stringify(cart));
+        }
+        
+=======
         localStorage.setItem("plantCart", JSON.stringify(cart));
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
         updateUI();
       };
 
@@ -491,6 +621,16 @@
         }, 2000);
       }
 
+<<<<<<< HEAD
+      document.getElementById("user-btn").onclick = () => {
+        if (currentUser) {
+          window.location.href = "./pages/user.html";
+        } else {
+          window.location.href = "./pages/user-auth.html";
+        }
+      };
+=======
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
       document.getElementById("cart-btn").onclick = () =>
         document.getElementById("cart-modal").classList.add("active");
       document.getElementById("close-cart").onclick = () =>
@@ -501,6 +641,8 @@
 
       renderProducts();
       updateUI();
+<<<<<<< HEAD
+=======
 
       let authButtonsDiv = document.getElementById("auth-button");
       const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -520,6 +662,7 @@
         }
       }
       document.addEventListener("DOMContentLoaded", handleCheckUser());
+>>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
     </script>
   </body>
 </html>
