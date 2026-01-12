@@ -16,10 +16,7 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.18",
-<<<<<<< HEAD
     "express": "^5.2.1",
-=======
->>>>>>> 64e61465bbae92f003c4dbf6c64afc9cba02acce
     "lucide": "^0.562.0",
     "tailwindcss": "^4.1.18"
   }
