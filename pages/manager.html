@@ -1,40 +1,41 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petal - Premium Plant Store</title>
-</head>
-<body>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <title>Petal Admin - Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-       
         body { 
-        font-family: 'Inter', sans-serif;
-         background-color: #000;
-          color: #f4f4f5; }
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #f4f4f5; 
+        }
         .glass {
-             background: rgba(24, 24, 27, 0.7);
-             backdrop-filter: blur(12px);
-             border: 1px solid rgba(255, 255, 255, 0.1); }
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
         .table-glass {
-             background: #09090b;
-             border: 1px solid #18181b;
-             }
+            background: #09090b;
+            border: 1px solid #18181b;
+        }
         .status-success { 
             background: rgba(34, 197, 94, 0.1); 
             color: #4ade80; 
             border: 1px solid rgba(34, 197, 94, 0.2);
-         }
+        }
         .status-pending {
-             background: rgba(245, 158, 11, 0.1); 
-             color: #fbbf24; 
-             border: 1px solid rgba(245, 158, 11, 0.2);
-             }
+            background: rgba(245, 158, 11, 0.1); 
+            color: #fbbf24; 
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
         canvas {
-             max-height: 40px !important; 
-             width: 100% !important; }
+            max-height: 40px !important; 
+            width: 100% !important; 
+        }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -56,7 +57,7 @@
     <main class="max-w-7xl mx-auto p-6 md:p-10">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
             <div>
-                <h1 class="text-4xl font-black tracking-tighter italic">Petal <span class="text-green-500 underline">ADMIN.</span></h1>
+                <h1 class="text-4xl font-black tracking-tighter italic">Petal <span class="text-green-500 ">Admin.</span></h1>
                 <p class="text-zinc-500 mt-2">Premium monitoring for your commerce vibe.</p>
             </div>
             <div class="flex flex-wrap gap-3 w-full md:w-auto">
@@ -70,6 +71,179 @@
             </div>
         </div>
 
-     
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-48">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Total Orders</p>
+                        <h3 class="text-3xl font-bold">2,543</h3>
+                    </div>
+                    <div class="text-green-500 text-xs font-bold">+12%</div>
+                </div>
+                <div class="mt-4"><canvas id="chart1"></canvas></div>
+            </div>
+
+            <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-48">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Revenue</p>
+                        <h3 class="text-3xl font-bold">$42.8k</h3>
+                    </div>
+                    <div class="text-green-500 text-xs font-bold">+8%</div>
+                </div>
+                <div class="mt-4"><canvas id="chart2"></canvas></div>
+            </div>
+
+            <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-48">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Returns</p>
+                        <h3 class="text-3xl font-bold">14</h3>
+                    </div>
+                    <div class="text-red-500 text-xs font-bold">-2%</div>
+                </div>
+                <div class="mt-4"><canvas id="chart3"></canvas></div>
+            </div>
+
+            <div class="glass p-6 rounded-[1rem] flex flex-col justify-between h-48">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Active Users</p>
+                        <h3 class="text-3xl font-bold">892</h3>
+                    </div>
+                    <div class="text-green-500 text-xs font-bold">+24%</div>
+                </div>
+                <div class="mt-4"><canvas id="chart4"></canvas></div>
+            </div>
+        </div>
+
+        <div class="table-glass rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left" id="orderTable">
+                    <thead>
+                        <tr class="border-b border-white/5 bg-white/5">
+                            <th class="px-8 py-6 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Order</th>
+                            <th class="px-8 py-6 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Customer</th>
+                            <th class="px-8 py-6 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Payment</th>
+                            <th class="px-8 py-6 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Total</th>
+                            <th class="px-8 py-6 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5" id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+    
+        const STORAGE_KEY = 'petal_admin_orders';
+        const defaultOrders = [
+            { id: '#1002', name: 'Wade Warren', status: 'Pending', total: '$20.00' },
+            { id: '#1004', name: 'Esther Howard', status: 'Success', total: '$22.00' },
+            { id: '#1007', name: 'Jenny Wilson', status: 'Pending', total: '$45.00' },
+            { id: '#1009', name: 'Guy Hawkins', status: 'Success', total: '$120.00' },
+            { id: '#1012', name: 'Robert Fox', status: 'Success', total: '$89.00' },
+            { id: '#1015', name: 'Jacob Jones', status: 'Pending', total: '$12.50' }
+        ];
+
+        let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultOrders;
+
+        
+        function syncStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+        }
+
+        function renderTable() {
+            const body = document.getElementById('tableBody');
+            body.innerHTML = orders.map(o => `
+                <tr class="hover:bg-white/[0.02] transition-colors" id="row-${o.id.replace('#','')}">
+                    <td class="px-8 py-5 font-bold text-zinc-400">${o.id}</td>
+                    <td class="px-8 py-5 font-semibold">${o.name}</td>
+                    <td class="px-8 py-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${o.status === 'Success' ? 'status-success' : 'status-pending'}">
+                            ${o.status}
+                        </span>
+                    </td>
+                    <td class="px-8 py-5 font-bold text-green-500 tracking-tighter">${o.total}</td>
+                    <td class="px-8 py-5 text-right space-x-2">
+                        ${o.status === 'Pending' ? `<button onclick="makePay('${o.id}')" class="p-2 text-zinc-400 hover:text-green-500 transition"><i data-lucide="credit-card" class="w-5 h-5"></i></button>` : ''}
+                        <button onclick="delOrder('${o.id}')" class="p-2 text-zinc-400 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Actions handling
+        window.openModal = () => document.getElementById('createModal').classList.remove('hidden');
+        window.closeModal = () => document.getElementById('createModal').classList.add('hidden');
+
+        window.addNewOrder = () => {
+            const name = document.getElementById('custName').value;
+            const total = document.getElementById('orderTotal').value;
+            if(!name || !total) return alert("Fill fields");
+            
+            orders.unshift({ 
+                id: `#${Math.floor(1000 + Math.random() * 9000)}`, 
+                name, 
+                status: 'Pending', 
+                total: `$${parseFloat(total).toFixed(2)}` 
+            });
+
+            syncStorage(); 
+            renderTable();
+            closeModal();
+            
+            
+            document.getElementById('custName').value = '';
+            document.getElementById('orderTotal').value = '';
+        };
+
+        window.makePay = (id) => {
+            const order = orders.find(o => o.id === id);
+            if (order) {
+                order.status = 'Success';
+                syncStorage(); 
+                renderTable();
+            }
+        };
+
+        window.delOrder = (id) => {
+            if(confirm("Delete this customer record?")) {
+                orders = orders.filter(o => o.id !== id);
+                syncStorage(); 
+                renderTable();
+            }
+        };
+
+        
+        document.getElementById('orderSearch').oninput = function() {
+            const val = this.value.toLowerCase();
+            document.querySelectorAll('#tableBody tr').forEach(tr => {
+                tr.style.display = tr.innerText.toLowerCase().includes(val) ? '' : 'none';
+            });
+        };
+
+       
+        const chartConfigs = {
+            type: 'line',
+            data: { labels: [1,2,3,4,5,6,7], datasets: [{ 
+                data: [10, 25, 15, 30, 20, 45, 40], 
+                borderColor: '#22c55e', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4 
+            }]},
+            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false }
+        };
+
+        new Chart(document.getElementById('chart1'), chartConfigs);
+        new Chart(document.getElementById('chart2'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], data: [5, 10, 40, 20, 60, 50, 80]}]}});
+        new Chart(document.getElementById('chart3'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], borderColor: '#ef4444', data: [80, 70, 60, 50, 40, 30, 20]}]}});
+        new Chart(document.getElementById('chart4'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], data: [20, 40, 30, 70, 50, 90, 100]}]}});
+
+        
+        renderTable();
+    </script>
 </body>
 </html>

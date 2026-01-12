@@ -6,7 +6,6 @@
     <title>Petal - Premium Plant Store</title>
     <link rel="stylesheet" href="./styles/output.css" />
     <style>
-      
       /* --- Pinterest Masonry Layout --- */
       .masonry-grid {
         column-count: 2;
@@ -114,17 +113,20 @@
             >Petal</span
           >
         </div>
-        <button
-          id="cart-btn"
-          class="relative p-3 hover:bg-white/5 rounded-full transition"
-        >
-          <i data-lucide="shopping-basket" class="w-6 h-6"></i>
-          <span
-            id="cart-count"
-            class="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center hidden"
-            >0</span
+        <div class="flex items-center gap-x-8">
+          <button
+            id="cart-btn"
+            class="relative p-3 hover:bg-white/5 rounded-full transition"
           >
-        </button>
+            <i data-lucide="shopping-basket" class="w-6 h-6"></i>
+            <span
+              id="cart-count"
+              class="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center hidden"
+              >0</span
+            >
+          </button>
+          <div id="auth-button"></div>
+        </div>
       </div>
     </nav>
 
@@ -442,15 +444,19 @@
                 <p class="font-bold text-sm">${i.name}</p>
                 <p class="text-green-500 text-sm">Rp ${i.price.toLocaleString()}</p>
                 <div class="flex gap-4 mt-2">
-                    <button class="cursor-pointer" onclick="updateQty(${i.id}, -1)">-</button>
+                    <button class="cursor-pointer" onclick="updateQty(${
+                      i.id
+                    }, -1)">-</button>
                     <span>${i.quantity}</span>
-                    <button class="cursor-pointer" onclick="updateQty(${i.id}, 1)">+</button>
+                    <button class="cursor-pointer" onclick="updateQty(${
+                      i.id
+                    }, 1)">+</button>
                   </div>
                 </div>
                 <div>
                   <button class="cursor-pointer"  onclick='removeFromCart(${
-                  i.id
-                })'>
+                    i.id
+                  })'>
                 <i data-lucide='trash' class="text-red-600"></i>
               </button>
             </div>
@@ -495,6 +501,25 @@
 
       renderProducts();
       updateUI();
+
+      let authButtonsDiv = document.getElementById("auth-button");
+      const user = JSON.parse(localStorage.getItem("currentUser"));
+      function handleCheckUser() {
+        if (!user) {
+          authButtonsDiv.innerHTML = `
+          <a href="./pages/user-auth.html" class="text-white bg-green-600 p-3 rounded-xl font-extrabold cursor-pointer hover:bg-green-700 duration-200">
+            Login 
+          </a>
+          `;
+        } else {
+          authButtonsDiv.innerHTML = `
+          <a href="./pages/manager.html" class="text-white bg-green-600 p-3 rounded-xl font-extrabold cursor-pointer hover:bg-green-700 duration-200">
+            Access Dashboard
+          </a>
+          `;
+        }
+      }
+      document.addEventListener("DOMContentLoaded", handleCheckUser());
     </script>
   </body>
 </html>
