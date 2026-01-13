@@ -72,9 +72,7 @@
                         <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4"></i>
                         <input type="text" id="orderSearch" placeholder="Search customer..." class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm transition">
                     </div>
-                    <button onclick="openModal()" class="bg-green-500 text-black px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-green-400 transition flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Create
-                    </button>
+                   
                 </div>
             </div>
 
@@ -121,7 +119,7 @@
                 </div>
             </div>
 
-            <div class="table-glass rounded-[2rem] overflow-hidden shadow-2xl">
+            <div class="table-glass rounded-lg overflow-hidden shadow-2xl">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left" id="orderTable">
                         <thead>
@@ -187,10 +185,23 @@
         function syncStorage() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
         }
+    
+   document.getElementById('orderSearch').addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    
+    const filteredOrders = orders.filter(order => 
+        order.name.toLowerCase().includes(searchTerm) || 
+        order.id.toLowerCase().includes(searchTerm)
+    );
 
-        function renderTable() {
+    
+    renderTable(filteredOrders);
+}); 
+
+        function renderTable(data = orders) {
             const body = document.getElementById('tableBody');
-            body.innerHTML = orders.map(o => `
+            body.innerHTML = data.map(o => `
                 <tr class="hover:bg-white/[0.02] transition-colors">
                     <td class="px-6 py-4 font-bold text-zinc-400 text-sm">${o.id}</td>
                     <td class="px-6 py-4 font-semibold text-sm">${o.name}</td>
@@ -254,6 +265,16 @@
         new Chart(document.getElementById('chart4'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], data: [20, 70, 90]}]}});
 
         renderTable();
+       
+        const savedData = localStorage.getItem('petal_admin_orders');
+
+
+        if (savedData) {
+            orders = JSON.parse(savedData);
+        } else {
+        
+            orders = defaultOrders;
+        }
     </script>
 </body>
 </html>
