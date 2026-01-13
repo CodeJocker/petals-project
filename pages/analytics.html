@@ -1,213 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Petal Admin | Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background: #050505; color: #f4f4f5; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .stat-card { background: #09090b; border: 1px solid #18181b; }
-        .sidebar { border-right: 1px solid #18181b; background: #050505; }
-        .nav-link.active { background: rgba(34, 197, 94, 0.1); color: #22c55e; border-right: 3px solid #22c55e; }
-        canvas { max-width: 100% !important; }
+      body {
+        background: #050505;
+        color: #f4f4f5;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+      }
+      .stat-card {
+        background: #09090b;
+        border: 1px solid #18181b;
+      }
+      .sidebar {
+        border-right: 1px solid #18181b;
+        background: #050505;
+      }
+      .nav-link.active {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border-right: 3px solid #22c55e;
+      }
+      canvas {
+        max-width: 100% !important;
+      }
     </style>
-</head>
-<body class="flex min-h-screen">
+  </head>
+  <body class="flex min-h-screen">
+    <aside
+      class="sidebar w-64 fixed inset-y-0 left-0 z-50 flex flex-col p-6 hidden md:flex"
+    >
+      <div class="mb-10 px-2">
+        <h1
+          class="text-2xl font-black uppercase tracking-tighter italic text-white"
+        >
+          Petal <span class="text-green-500">Admin</span>
+        </h1>
+        <p
+          class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1"
+        >
+          Management Suite
+        </p>
+      </div>
 
-    <aside class="sidebar w-64 fixed inset-y-0 left-0 z-50 flex flex-col p-6 hidden md:flex">
-        <div class="mb-10 px-2">
-            <h1 class="text-2xl font-black uppercase tracking-tighter italic text-white">Petal <span class="text-green-500">Admin</span></h1>
-            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Management Suite</p>
-        </div>
+      <nav class="space-y-2 flex-1">
+        <button
+          onclick="showSection('analytics')"
+          id="link-analytics"
+          class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            ></path>
+          </svg>
+          Dashboard
+        </button>
+        <button
+          onclick="showSection('orders')"
+          id="link-orders"
+          class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-zinc-400 hover:text-white transition-all"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+            ></path>
+          </svg>
+          View Orders
+        </button>
+      </nav>
 
-        <nav class="space-y-2 flex-1">
-            <button onclick="showSection('analytics')" id="link-analytics" class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Dashboard
-            </button>
-            <button onclick="showSection('orders')" id="link-orders" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-zinc-400 hover:text-white transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                View Orders
-            </button>
-        </nav>
-
-        <div class="pt-6 border-t border-white/5">
-            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-500/10 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Logout
-            </button>
-        </div>
+      <div class="pt-6 border-t border-white/5">
+        <button
+          onclick="logout()"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-500/10 transition-all"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            ></path>
+          </svg>
+          Logout
+        </button>
+      </div>
     </aside>
 
     <main class="flex-1 md:ml-64 p-4 md:p-10">
-        
-        <header class="flex justify-between items-center mb-10">
-            <h2 id="section-title" class="text-xl font-bold">Dashboard Overview</h2>
-            <div id="user-pill" class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-xs font-medium">
-                Admin: <span class="text-green-500" id="admin-name">Jonathan</span>
-            </div>
-        </header>
+      <header class="flex justify-between items-center mb-10">
+        <h2 id="section-title" class="text-xl font-bold">Dashboard Overview</h2>
+        <div
+          id="user-pill"
+          class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-xs font-medium"
+        >
+          Admin: <span class="text-green-500" id="admin-name">Jonathan</span>
+        </div>
+      </header>
 
-        <div id="section-analytics" class="space-y-8 animate-in fade-in duration-500">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="stat-card lg:col-span-2 p-8 rounded-[2rem]">
-                    <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]">Sales Activity</h3>
-                    <div class="relative h-[300px]"><canvas id="mainSalesChart"></canvas></div>
-                </div>
-                <div class="stat-card p-8 rounded-[2rem]">
-                    <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]">Inventory Split</h3>
-                    <div class="relative h-[300px]"><canvas id="categoryDoughnut"></canvas></div>
-                </div>
+      <div
+        id="section-analytics"
+        class="space-y-8 animate-in fade-in duration-500"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="stat-card lg:col-span-2 p-8 rounded-[2rem]">
+            <h3
+              class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]"
+            >
+              Sales Activity
+            </h3>
+            <div class="relative h-[300px]">
+              <canvas id="mainSalesChart"></canvas>
             </div>
-
-            <div class="stat-card rounded-[2rem] overflow-hidden">
-                <div class="p-8 border-b border-white/5 font-bold uppercase text-xs tracking-widest">Active Users</div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm"><tbody id="user-list"></tbody></table>
-                </div>
+          </div>
+          <div class="stat-card p-8 rounded-[2rem]">
+            <h3
+              class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]"
+            >
+              Inventory Split
+            </h3>
+            <div class="relative h-[300px]">
+              <canvas id="categoryDoughnut"></canvas>
             </div>
+          </div>
         </div>
 
-        <div id="section-orders" class="hidden animate-in slide-in-from-bottom-4 duration-500">
-            <div class="stat-card rounded-[2rem] overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-white/5 text-[10px] uppercase tracking-widest font-black text-zinc-500">
-                        <tr>
-                            <th class="p-6">Product</th>
-                            <th class="p-6">Category</th>
-                            <th class="p-6 text-center">Qty</th>
-                            <th class="p-6">Unit Price</th>
-                            <th class="p-6 text-right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-list-table" class="divide-y divide-white/5">
-                        </tbody>
-                    <tfoot class="bg-green-500/5">
-                        <tr>
-                            <td colspan="4" class="p-6 text-right font-bold text-zinc-400 uppercase text-xs">Total Order Value</td>
-                            <td id="total-order-sum" class="p-6 text-right font-black text-green-500 text-xl">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+        <div class="stat-card rounded-[2rem] overflow-hidden">
+          <div
+            class="p-8 border-b border-white/5 font-bold uppercase text-xs tracking-widest"
+          >
+            Active Users
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <tbody id="user-list"></tbody>
+            </table>
+          </div>
         </div>
+      </div>
+
+      <div
+        id="section-orders"
+        class="hidden animate-in slide-in-from-bottom-4 duration-500"
+      >
+        <div class="stat-card rounded-[2rem] overflow-hidden">
+          <table class="w-full text-left border-collapse">
+            <thead
+              class="bg-white/5 text-[10px] uppercase tracking-widest font-black text-zinc-500"
+            >
+              <tr>
+                <th class="p-6">Product</th>
+                <th class="p-6">Category</th>
+                <th class="p-6 text-center">Qty</th>
+                <th class="p-6">Unit Price</th>
+                <th class="p-6 text-right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody
+              id="orders-list-table"
+              class="divide-y divide-white/5"
+            ></tbody>
+            <tfoot class="bg-green-500/5">
+              <tr>
+                <td
+                  colspan="4"
+                  class="p-6 text-right font-bold text-zinc-400 uppercase text-xs"
+                >
+                  Total Order Value
+                </td>
+                <td
+                  id="total-order-sum"
+                  class="p-6 text-right font-black text-green-500 text-xl"
+                >
+                  Rp 0
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </main>
 
+    <script src="../scripts/app.js"></script>
     <script>
-        // 1. DATA INITIALIZATION
-        const current = JSON.parse(localStorage.getItem('currentUser'));
-        const plantCart = JSON.parse(localStorage.getItem('plantCart')) || [];
-        let userDB = JSON.parse(localStorage.getItem('petalUsers')) || [];
+      // 1. DATA INITIALIZATION (use shared utilities)
+      const current = petalApp.getCurrentUser();
+      const plantCart = petalApp.getCart();
+      let userDB = petalApp.getUsers();
 
-        // Auth Guard
-        if(!current || current.role !== 'admin') window.location.href = 'user-auth.html';
-        document.getElementById('admin-name').innerText = current.name || 'Admin';
+      // Auth Guard
+      if (!current || current.role !== "admin")
+        window.location.href = "user-auth.html";
+      document.getElementById("admin-name").innerText = current.name || "Admin";
 
-        // 2. NAVIGATION LOGIC
-        function showSection(sectionId) {
-            document.getElementById('section-analytics').classList.add('hidden');
-            document.getElementById('section-orders').classList.add('hidden');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            
-            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
-            document.getElementById(`link-${sectionId}`).classList.add('active');
-            document.getElementById('section-title').innerText = sectionId === 'analytics' ? 'Dashboard Overview' : 'Live Order Registry';
+      // 2. NAVIGATION LOGIC
+      function showSection(sectionId) {
+        document.getElementById("section-analytics").classList.add("hidden");
+        document.getElementById("section-orders").classList.add("hidden");
+        document
+          .querySelectorAll(".nav-link")
+          .forEach((l) => l.classList.remove("active"));
+
+        document
+          .getElementById(`section-${sectionId}`)
+          .classList.remove("hidden");
+        document.getElementById(`link-${sectionId}`).classList.add("active");
+        document.getElementById("section-title").innerText =
+          sectionId === "analytics"
+            ? "Dashboard Overview"
+            : "Live Order Registry";
+      }
+
+      // 3. RENDER ORDERS (Using real plantCart data)
+      function renderOrders() {
+        const table = document.getElementById("orders-list-table");
+        let total = 0;
+
+        if (plantCart.length === 0) {
+          table.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-zinc-500 uppercase tracking-widest text-xs">No active orders found</td></tr>`;
+          return;
         }
 
-        // 3. RENDER ORDERS (Using real plantCart data)
-        function renderOrders() {
-            const table = document.getElementById('orders-list-table');
-            let total = 0;
-
-            if (plantCart.length === 0) {
-                table.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-zinc-500 uppercase tracking-widest text-xs">No active orders found</td></tr>`;
-                return;
-            }
-
-            table.innerHTML = plantCart.map(item => {
-                const subtotal = item.price * item.quantity;
-                total += subtotal;
-                return `
+        table.innerHTML = plantCart
+          .map((item) => {
+            const subtotal = item.price * item.quantity;
+            total += subtotal;
+            return `
                     <tr class="hover:bg-white/[0.02] transition">
                         <td class="p-6 flex items-center gap-4">
-                            <img src=".${item.image}" class="w-12 h-12 rounded-lg object-cover bg-zinc-800">
+                            <img src=".${
+                              item.image
+                            }" class="w-12 h-12 rounded-lg object-cover bg-zinc-800">
                             <div>
-                                <div class="font-bold text-white">${item.name}</div>
-                                <div class="text-[10px] text-zinc-500 uppercase">ID: #${item.id}</div>
+                                <div class="font-bold text-white">${
+                                  item.name
+                                }</div>
+                                <div class="text-[10px] text-zinc-500 uppercase">ID: #${
+                                  item.id
+                                }</div>
                             </div>
                         </td>
-                        <td class="p-6"><span class="px-3 py-1 bg-white/5 rounded-full text-[10px] uppercase font-bold text-zinc-400">${item.category}</span></td>
-                        <td class="p-6 text-center font-mono">${item.quantity}</td>
+                        <td class="p-6"><span class="px-3 py-1 bg-white/5 rounded-full text-[10px] uppercase font-bold text-zinc-400">${
+                          item.category
+                        }</span></td>
+                        <td class="p-6 text-center font-mono">${
+                          item.quantity
+                        }</td>
                         <td class="p-6 text-zinc-400 italic">Rp ${item.price.toLocaleString()}</td>
                         <td class="p-6 text-right font-bold text-white">Rp ${subtotal.toLocaleString()}</td>
                     </tr>
                 `;
-            }).join('');
+          })
+          .join("");
 
-            document.getElementById('total-order-sum').innerText = `Rp ${total.toLocaleString()}`;
-        }
+        document.getElementById(
+          "total-order-sum"
+        ).innerText = `Rp ${total.toLocaleString()}`;
+      }
 
-        // 4. CHART LOGIC (Jonathan's Analytics)
-        function initCharts() {
-            Chart.defaults.color = '#52525b';
-            
-            // Sales Chart
-            new Chart(document.getElementById('mainSalesChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                    datasets: [{
-                        data: [400000, 1200000, 800000, 1500000, 2100000],
-                        borderColor: '#22c55e',
-                        backgroundColor: 'rgba(34, 197, 94, 0.05)',
-                        fill: true, tension: 0.4, borderWidth: 3
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+      // 4. CHART LOGIC (Jonathan's Analytics)
+      function initCharts() {
+        Chart.defaults.color = "#52525b";
 
-            // Doughnut Chart (Real logic based on category counts in plantCart)
-            const catCounts = plantCart.reduce((acc, item) => {
-                acc[item.category] = (acc[item.category] || 0) + item.quantity;
-                return acc;
-            }, {});
+        // Sales Chart
+        new Chart(document.getElementById("mainSalesChart"), {
+          type: "line",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [
+              {
+                data: [400000, 1200000, 800000, 1500000, 2100000],
+                borderColor: "#22c55e",
+                backgroundColor: "rgba(34, 197, 94, 0.05)",
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+          },
+        });
 
-            new Chart(document.getElementById('categoryDoughnut'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(catCounts),
-                    datasets: [{
-                        data: Object.values(catCounts),
-                        backgroundColor: ['#22c55e', '#3b82f6', '#f59e0b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '80%' }
-            });
-        }
+        // Doughnut Chart (Real logic based on category counts in plantCart)
+        const catCounts = plantCart.reduce((acc, item) => {
+          acc[item.category] = (acc[item.category] || 0) + item.quantity;
+          return acc;
+        }, {});
 
-        function renderUsers() {
-            document.getElementById('user-list').innerHTML = userDB.map(u => `
+        new Chart(document.getElementById("categoryDoughnut"), {
+          type: "doughnut",
+          data: {
+            labels: Object.keys(catCounts),
+            datasets: [
+              {
+                data: Object.values(catCounts),
+                backgroundColor: ["#22c55e", "#3b82f6", "#f59e0b"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "80%",
+          },
+        });
+      }
+
+      function renderUsers() {
+        document.getElementById("user-list").innerHTML = userDB
+          .map(
+            (u) => `
                 <tr class="border-b border-white/5">
                     <td class="p-6 font-bold uppercase text-xs tracking-tighter">${u.name}</td>
                     <td class="p-6 text-zinc-500 text-xs">${u.email}</td>
                     <td class="p-6 text-right"><span class="text-green-500 font-bold uppercase text-[10px]">${u.role}</span></td>
                 </tr>
-            `).join('');
-        }
+            `
+          )
+          .join("");
+      }
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'user-auth.html';
-        }
+      function logout() {
+        petalApp.setCurrentUser(null);
+        window.location.href = "user-auth.html";
+      }
 
-        window.onload = () => {
-            initCharts();
-            renderUsers();
-            renderOrders();
-        };
+      window.onload = () => {
+        initCharts();
+        renderUsers();
+        renderOrders();
+      };
     </script>
-</body>
+  </body>
 </html>

@@ -282,6 +282,7 @@
     </div>
 
     <script src="./node_modules/lucide/dist/umd/lucide.js"></script>
+    <script src="./scripts/app.js"></script>
     <script>
       const plants = [];
       const plantTypes = [
@@ -320,7 +321,15 @@
         });
       }
 
-      let cart = JSON.parse(localStorage.getItem("plantCart")) || [];
+      // Persist initial product set for manager/backend pages
+      if (!localStorage.getItem("petalPlants")) {
+        localStorage.setItem("petalPlants", JSON.stringify(plants));
+      }
+
+      let cart =
+        (window.petalApp && petalApp.getCart()) ||
+        JSON.parse(localStorage.getItem("plantCart")) ||
+        [];
       let productCategory = document.getElementById("product-category");
       let productName = document.getElementById("product-name");
       let productPrice = document.getElementById("product-price");
@@ -405,7 +414,8 @@
         const item = cart.find((x) => x.id === id);
         if (item) item.quantity++;
         else cart.push({ ...p, quantity: 1 });
-        localStorage.setItem("plantCart", JSON.stringify(cart));
+        // persist cart (shared helper will sync to currentUser if present)
+        if (window.petalApp) petalApp.setCart(cart);
         updateUI();
         showToast(`Added ${p.name}`);
       };
@@ -414,7 +424,7 @@
         const i = cart.find((x) => x.id === id);
         i.quantity += delta;
         if (i.quantity <= 0) cart = cart.filter((x) => x.id !== id);
-        localStorage.setItem("plantCart", JSON.stringify(cart));
+        if (window.petalApp) petalApp.setCart(cart);
         updateUI();
       };
 
@@ -476,7 +486,7 @@
         cart = cart.filter((element) => {
           return element.id !== id;
         });
-        localStorage.setItem("plantCart", JSON.stringify(cart));
+        if (window.petalApp) petalApp.setCart(cart);
         updateUI();
       };
 
@@ -503,7 +513,9 @@
       updateUI();
 
       let authButtonsDiv = document.getElementById("auth-button");
-      const user = JSON.parse(localStorage.getItem("currentUser"));
+      const user =
+        (window.petalApp && petalApp.getCurrentUser()) ||
+        JSON.parse(localStorage.getItem("currentUser"));
       function handleCheckUser() {
         if (!user) {
           authButtonsDiv.innerHTML = `
