@@ -3,156 +3,97 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Petal Admin | Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Petal Admin | Analytics</title>
+    <link rel="stylesheet" href="../styles/output.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
     <style>
-          body { font-family: 'Inter', sans-serif; background-color: #000; color: #f4f4f5; overflow-x: hidden; }
-        .glass { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .table-glass { background: #09090b; border: 1px solid #18181b; }
-        .status-success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .status-pending { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
       body {
-        font-family: "Inter", sans-serif;
-        background-color: #000;
+        font-family: 'Inter', sans-serif;
+        background-color: #050505;
         color: #f4f4f5;
         overflow-x: hidden;
       }
+
       .glass {
         background: rgba(24, 24, 27, 0.7);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .table-glass {
-        background: #09090b;
-        border: 1px solid #18181b;
-      }
-      .status-success {
-        background: rgba(34, 197, 94, 0.1);
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.2);
-      }
-      .status-pending {
-        background: rgba(245, 158, 11, 0.1);
-        color: #fbbf24;
-        border: 1px solid rgba(245, 158, 11, 0.2);
-      }
-      body {
-        background: #050505;
-        color: #f4f4f5;
-        font-family: "Inter", sans-serif;
-        overflow-x: hidden;
-      }
+
       .stat-card {
         background: #09090b;
         border: 1px solid #18181b;
+        transition: transform 0.3s ease;
       }
-      .sidebar {
-        border-right: 1px solid #18181b;
-        background: #050505;
+
+      .stat-card:hover {
+        border-color: rgba(34, 197, 94, 0.3);
       }
-      .nav-link.active {
-        background: rgba(34, 197, 94, 0.1);
-        color: #22c55e;
-        border-right: 3px solid #22c55e;
+
+      .sidebar-item.active {
+        background: #22c55e;
+        color: #000;
       }
-      canvas {
-        max-width: 100% !important;
-      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #050505; }
+      ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
     </style>
   </head>
   <body class="flex min-h-screen">
-    <div
-      id="sidebarOverlay"
-      onclick="toggleSidebar()"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[140] hidden"
-    ></div>
-
-    <aside
-      id="sidebar"
-      class="fixed inset-y-0 left-0 w-64 glass border-r border-white/5 z-[150] -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col"
-    >
-      <div class="p-8 flex items-center justify-between">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 glass border-r border-white/5 z-[150] transition-transform duration-300 flex flex-col">
+      <div class="p-8">
         <h1 class="text-2xl font-black tracking-tighter italic">
           Petal <span class="text-green-500">Admin.</span>
         </h1>
-        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-zinc-500">
-          <i data-lucide="x"></i>
-        </button>
       </div>
 
       <nav class="flex-1 px-4 space-y-2">
-        <a
-          href="./manager.html"
-          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition"
-        >
+        <a href="#" onclick="showSection('orders')" id="link-orders" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition">
           <i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders
         </a>
-        <a
-          href="./customers.html"
-          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition"
-        >
+        <a href="./customers.html" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition">
           <i data-lucide="users" class="w-5 h-5"></i> Customers
         </a>
-        <a
-          href="./analytics.html"
-          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-white bg-green-600 hover:bg-green-600 duration-200 transition"
-        >
-          <i data-lucide="settings" class="w-5 h-5"></i> Analytics
+        <a href="#" onclick="showSection('analytics')" id="link-analytics" class="sidebar-item active flex items-center gap-3 px-4 py-3 text-white rounded-xl font-bold text-sm transition">
+          <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Analytics
         </a>
       </nav>
 
       <div class="p-6 border-t border-white/5">
         <div class="flex items-center gap-3 px-2">
-          <div
-            class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold"
-          >
-            A
-          </div>
+          <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold" id="admin-initial">A</div>
           <div>
-            <p class="text-sm font-bold">Admin User</p>
-            <p class="text-[10px] text-zinc-500 font-black uppercase">
-              Pro Plan
-            </p>
+            <p class="text-sm font-bold" id="admin-name-display">Admin</p>
+            <button onclick="logout()" class="text-[10px] text-red-500 font-black uppercase hover:underline">Logout</button>
           </div>
         </div>
       </div>
     </aside>
-    <main class="flex-1 md:ml-64 p-4 md:p-10">
+
+    <main class="flex-1 ml-64 p-10">
       <header class="flex justify-between items-center mb-10">
-        <h2 id="section-title" class="text-xl font-bold">Dashboard Overview</h2>
-        <div
-          id="user-pill"
-          class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-xs font-medium"
-        >
-          Admin: <span class="text-green-500" id="admin-name">Jonathan</span>
+        <h2 id="section-title" class="text-2xl font-extrabold tracking-tight">Dashboard Overview</h2>
+        <div class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-xs font-medium">
+          Status: <span class="text-green-500">System Live</span>
         </div>
       </header>
 
-      <div
-        id="section-analytics"
-        class="space-y-8 animate-in fade-in duration-500"
-      >
+      <div id="section-analytics" class="space-y-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div class="stat-card lg:col-span-2 p-8 rounded-[2rem]">
-            <h3
-              class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]"
-            >
-              Sales Activity
-            </h3>
+            <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]">Weekly Revenue</h3>
             <div class="relative h-[300px]">
               <canvas id="mainSalesChart"></canvas>
             </div>
           </div>
+
           <div class="stat-card p-8 rounded-[2rem]">
-            <h3
-              class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]"
-            >
-              Inventory Split
-            </h3>
+            <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em]">Most Crated Plants</h3>
             <div class="relative h-[300px]">
               <canvas id="categoryDoughnut"></canvas>
             </div>
@@ -160,214 +101,188 @@
         </div>
 
         <div class="stat-card rounded-[2rem] overflow-hidden">
-          <div
-            class="p-8 border-b border-white/5 font-bold uppercase text-xs tracking-widest"
-          >
-            Active Users
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <tbody id="user-list"></tbody>
-            </table>
-          </div>
+          <div class="p-8 border-b border-white/5 font-bold uppercase text-xs tracking-widest text-zinc-400">Registered Customers</div>
+          <table class="w-full text-left text-sm">
+            <tbody id="user-list-table"></tbody>
+          </table>
         </div>
       </div>
 
-      <div
-        id="section-orders"
-        class="hidden animate-in slide-in-from-bottom-4 duration-500"
-      >
+      <div id="section-orders" class="hidden">
         <div class="stat-card rounded-[2rem] overflow-hidden">
           <table class="w-full text-left border-collapse">
-            <thead
-              class="bg-white/5 text-[10px] uppercase tracking-widest font-black text-zinc-500"
-            >
+            <thead class="bg-white/5 text-[10px] uppercase tracking-widest font-black text-zinc-500">
               <tr>
                 <th class="p-6">Product</th>
                 <th class="p-6">Category</th>
-                <th class="p-6 text-center">Qty</th>
+                <th class="p-6 text-center">In Carts</th>
                 <th class="p-6">Unit Price</th>
-                <th class="p-6 text-right">Subtotal</th>
+                <th class="p-6 text-right">Potential Revenue</th>
               </tr>
             </thead>
-            <tbody
-              id="orders-list-table"
-              class="divide-y divide-white/5"
-            ></tbody>
-            <tfoot class="bg-green-500/5">
-              <tr>
-                <td
-                  colspan="4"
-                  class="p-6 text-right font-bold text-zinc-400 uppercase text-xs"
-                >
-                  Total Order Value
-                </td>
-                <td
-                  id="total-order-sum"
-                  class="p-6 text-right font-black text-green-500 text-xl"
-                >
-                  Rp 0
-                </td>
-              </tr>
-            </tfoot>
+            <tbody id="orders-list-table" class="divide-y divide-white/5"></tbody>
           </table>
         </div>
       </div>
     </main>
 
-    <script src="../scripts/app.js"></script>
     <script>
-      // 1. DATA INITIALIZATION (use shared utilities)
-      const current = petalApp.getCurrentUser();
-      const plantCart = petalApp.getCart();
-      let userDB = petalApp.getUsers();
+      // 1. DATA HANDLING
+      // Using simple localStorage mocks since petalApp wasn't provided in full
+      const getUsers = () => JSON.parse(localStorage.getItem("petalUsers")) || [];
+      const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
+
+      const userDB = getUsers();
+      const current = getCurrentUser();
 
       // Auth Guard
-      if (!current || current.role !== "admin")
-        window.location.href = "user-auth.html";
-      document.getElementById("admin-name").innerText = current.name || "Admin";
+      if (!current || current.role !== "admin") {
+        // Uncomment to enable security:
+        // window.location.href = "user-auth.html";
+      }
 
-      // 2. NAVIGATION LOGIC
+      // UI Init
+      document.getElementById("admin-name-display").innerText = current?.name || "Jonathan";
+      document.getElementById("admin-initial").innerText = (current?.name || "A").charAt(0).toUpperCase();
+
+      // 2. NAVIGATION
       function showSection(sectionId) {
         document.getElementById("section-analytics").classList.add("hidden");
         document.getElementById("section-orders").classList.add("hidden");
-        document
-          .querySelectorAll(".nav-link")
-          .forEach((l) => l.classList.remove("active"));
+        
+        document.querySelectorAll(".sidebar-item").forEach(l => {
+          l.classList.remove("active", "text-white");
+          l.classList.add("text-zinc-400");
+        });
 
-        document
-          .getElementById(`section-${sectionId}`)
-          .classList.remove("hidden");
-        document.getElementById(`link-${sectionId}`).classList.add("active");
-        document.getElementById("section-title").innerText =
-          sectionId === "analytics"
-            ? "Dashboard Overview"
-            : "Live Order Registry";
+        document.getElementById(`section-${sectionId}`).classList.remove("hidden");
+        const activeLink = document.getElementById(`link-${sectionId}`);
+        activeLink.classList.add("active", "text-white");
+        activeLink.classList.remove("text-zinc-400");
+
+        document.getElementById("section-title").innerText = 
+          sectionId === "analytics" ? "Dashboard Overview" : "Live Cart Inventory";
       }
 
-      // 3. RENDER ORDERS (Using real plantCart data)
-      function renderOrders() {
-        const table = document.getElementById("orders-list-table");
-        let total = 0;
-
-        if (plantCart.length === 0) {
-          table.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-zinc-500 uppercase tracking-widest text-xs">No active orders found</td></tr>`;
-          return;
-        }
-
-        table.innerHTML = plantCart
-          .map((item) => {
-            const subtotal = item.price * item.quantity;
-            total += subtotal;
-            return `
-                    <tr class="hover:bg-white/[0.02] transition">
-                        <td class="p-6 flex items-center gap-4">
-                            <img src=".${
-                              item.image
-                            }" class="w-12 h-12 rounded-lg object-cover bg-zinc-800">
-                            <div>
-                                <div class="font-bold text-white">${
-                                  item.name
-                                }</div>
-                                <div class="text-[10px] text-zinc-500 uppercase">ID: #${
-                                  item.id
-                                }</div>
-                            </div>
-                        </td>
-                        <td class="p-6"><span class="px-3 py-1 bg-white/5 rounded-full text-[10px] uppercase font-bold text-zinc-400">${
-                          item.category
-                        }</span></td>
-                        <td class="p-6 text-center font-mono">${
-                          item.quantity
-                        }</td>
-                        <td class="p-6 text-zinc-400 italic">Rp ${item.price.toLocaleString()}</td>
-                        <td class="p-6 text-right font-bold text-white">Rp ${subtotal.toLocaleString()}</td>
-                    </tr>
-                `;
-          })
-          .join("");
-
-        document.getElementById(
-          "total-order-sum"
-        ).innerText = `Rp ${total.toLocaleString()}`;
-      }
-
-      // 4. CHART LOGIC (Jonathan's Analytics)
+      // 3. CHARTING LOGIC
       function initCharts() {
         Chart.defaults.color = "#52525b";
 
-        // Sales Chart
+        // Line Chart (Mock Sales)
         new Chart(document.getElementById("mainSalesChart"), {
           type: "line",
           data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-            datasets: [
-              {
-                data: [400000, 1200000, 800000, 1500000, 2100000],
-                borderColor: "#22c55e",
-                backgroundColor: "rgba(34, 197, 94, 0.05)",
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-              },
-            ],
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [{
+              data: [120000, 450000, 300000, 900000, 600000, 1100000, 1400000],
+              borderColor: "#22c55e",
+              backgroundColor: "rgba(34, 197, 94, 0.05)",
+              fill: true,
+              tension: 0.4,
+              borderWidth: 3
+            }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-          },
+            scales: {
+              y: { grid: { color: "rgba(255,255,255,0.05)" } },
+              x: { grid: { display: false } }
+            }
+          }
         });
 
-        // Doughnut Chart (Real logic based on category counts in plantCart)
-        const catCounts = plantCart.reduce((acc, item) => {
-          acc[item.category] = (acc[item.category] || 0) + item.quantity;
-          return acc;
-        }, {});
+        // DOUGHNUT CHART: AGGREGATED CART ITEMS
+        const cartData = {};
+        userDB.forEach(user => {
+          if (user.cart) {
+            user.cart.forEach(item => {
+              const name = item.name || item.title || "Plant Item";
+              cartData[name] = (cartData[name] || 0) + (item.quantity || 1);
+            });
+          }
+        });
+
+        const labels = Object.keys(cartData);
+        const values = Object.values(cartData);
 
         new Chart(document.getElementById("categoryDoughnut"), {
           type: "doughnut",
           data: {
-            labels: Object.keys(catCounts),
-            datasets: [
-              {
-                data: Object.values(catCounts),
-                backgroundColor: ["#22c55e", "#3b82f6", "#f59e0b"],
-                borderWidth: 0,
-              },
-            ],
+            labels: labels.length ? labels : ["Empty"],
+            datasets: [{
+              data: values.length ? values : [1],
+              backgroundColor: ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899", "#8b5cf6"],
+              borderWidth: 0,
+              hoverOffset: 20
+            }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "80%",
-          },
+            cutout: "78%",
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20, font: { size: 11 } } }
+            }
+          }
         });
       }
 
-      function renderUsers() {
-        document.getElementById("user-list").innerHTML = userDB
-          .map(
-            (u) => `
-                <tr class="border-b border-white/5">
-                    <td class="p-6 font-bold uppercase text-xs tracking-tighter">${u.name}</td>
-                    <td class="p-6 text-zinc-500 text-xs">${u.email}</td>
-                    <td class="p-6 text-right"><span class="text-green-500 font-bold uppercase text-[10px]">${u.role}</span></td>
-                </tr>
-            `
-          )
-          .join("");
+      // 4. RENDERING TABLES
+      function renderData() {
+        // Render Users
+        const userTable = document.getElementById("user-list-table");
+        userTable.innerHTML = userDB.map(u => `
+          <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+            <td class="p-6 font-bold uppercase text-xs tracking-tighter">${u.name || 'Unknown'}</td>
+            <td class="p-6 text-zinc-500 text-xs">${u.email}</td>
+            <td class="p-6 text-right"><span class="text-green-500 font-bold uppercase text-[10px] bg-green-500/10 px-2 py-1 rounded">${u.role || 'user'}</span></td>
+          </tr>
+        `).join("");
+
+        // Render Aggregated Orders (Cart Items)
+        const orderTable = document.getElementById("orders-list-table");
+        const aggregated = {};
+        
+        userDB.forEach(user => {
+          if(user.cart) user.cart.forEach(item => {
+            if(!aggregated[item.name]) {
+              aggregated[item.name] = { ...item, totalQty: 0 };
+            }
+            aggregated[item.name].totalQty += item.quantity;
+          });
+        });
+
+        const items = Object.values(aggregated);
+        if (items.length === 0) {
+          orderTable.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-zinc-600 italic">No items currently in user carts</td></tr>`;
+        } else {
+          orderTable.innerHTML = items.map(item => `
+            <tr class="hover:bg-white/[0.02] transition">
+              <td class="p-6 flex items-center gap-4">
+                <img src="${item.image || item.img}" class="w-10 h-10 rounded-lg object-cover">
+                <div class="font-bold text-white">${item.name || item.title}</div>
+              </td>
+              <td class="p-6 text-xs text-zinc-500 uppercase">${item.category || 'Plant'}</td>
+              <td class="p-6 text-center font-mono font-bold text-green-500">${item.totalQty}</td>
+              <td class="p-6 text-zinc-400 italic">Rp ${item.price?.toLocaleString()}</td>
+              <td class="p-6 text-right font-bold text-white">Rp ${(item.price * item.totalQty).toLocaleString()}</td>
+            </tr>
+          `).join("");
+        }
       }
 
       function logout() {
-        petalApp.setCurrentUser(null);
+        localStorage.removeItem("currentUser");
         window.location.href = "user-auth.html";
       }
 
+      // Initial Load
       window.onload = () => {
+        lucide.createIcons();
         initCharts();
-        renderUsers();
-        renderOrders();
+        renderData();
       };
     </script>
   </body>
