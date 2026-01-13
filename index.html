@@ -335,6 +335,7 @@
       let productPrice = document.getElementById("product-price");
       let productDescription = document.getElementById("product-description");
 
+
       function getId(id) {
         const filteredData = plants.find((element) => {
           return element.id == id;
@@ -523,9 +524,15 @@
             Login 
           </a>
           `;
-        } else {
+        } else if(user && user.role == "admin") {
           authButtonsDiv.innerHTML = `
           <a href="./pages/manager.html" class="text-white bg-green-600 p-3 rounded-xl font-extrabold cursor-pointer hover:bg-green-700 duration-200">
+            Access Dashboard
+          </a>
+          `;
+        } else if(user && user.role == "user") {
+           authButtonsDiv.innerHTML = `
+          <a href="./pages/user.html" class="text-white bg-green-600 p-3 rounded-xl font-extrabold cursor-pointer hover:bg-green-700 duration-200">
             Access Dashboard
           </a>
           `;

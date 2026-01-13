@@ -5,8 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Petal Admin | Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
     <style>
+          body { font-family: 'Inter', sans-serif; background-color: #000; color: #f4f4f5; overflow-x: hidden; }
+        .glass { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .table-glass { background: #09090b; border: 1px solid #18181b; }
+        .status-success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000;
+        color: #f4f4f5;
+        overflow-x: hidden;
+      }
+      .glass {
+        background: rgba(24, 24, 27, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .table-glass {
+        background: #09090b;
+        border: 1px solid #18181b;
+      }
+      .status-success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
+      .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+      }
       body {
         background: #050505;
         color: #f4f4f5;
@@ -32,88 +65,62 @@
     </style>
   </head>
   <body class="flex min-h-screen">
+    <div
+      id="sidebarOverlay"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[140] hidden"
+    ></div>
+
     <aside
-      class="sidebar w-64 fixed inset-y-0 left-0 z-50 flex flex-col p-6 hidden md:flex"
+      id="sidebar"
+      class="fixed inset-y-0 left-0 w-64 glass border-r border-white/5 z-[150] -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col"
     >
-      <div class="mb-10 px-2">
-        <h1
-          class="text-2xl font-black uppercase tracking-tighter italic text-white"
-        >
-          Petal <span class="text-green-500">Admin</span>
+      <div class="p-8 flex items-center justify-between">
+        <h1 class="text-2xl font-black tracking-tighter italic">
+          Petal <span class="text-green-500">Admin.</span>
         </h1>
-        <p
-          class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1"
-        >
-          Management Suite
-        </p>
+        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-zinc-500">
+          <i data-lucide="x"></i>
+        </button>
       </div>
 
-      <nav class="space-y-2 flex-1">
-        <button
-          onclick="showSection('analytics')"
-          id="link-analytics"
-          class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all"
+      <nav class="flex-1 px-4 space-y-2">
+        <a
+          href="./manager.html"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            ></path>
-          </svg>
-          Dashboard
-        </button>
-        <button
-          onclick="showSection('orders')"
-          id="link-orders"
-          class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-zinc-400 hover:text-white transition-all"
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders
+        </a>
+        <a
+          href="./customers.html"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-            ></path>
-          </svg>
-          View Orders
-        </button>
+          <i data-lucide="users" class="w-5 h-5"></i> Customers
+        </a>
+        <a
+          href="./analytics.html"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-white bg-green-600 hover:bg-green-600 duration-200 transition"
+        >
+          <i data-lucide="settings" class="w-5 h-5"></i> Analytics
+        </a>
       </nav>
 
-      <div class="pt-6 border-t border-white/5">
-        <button
-          onclick="logout()"
-          class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-500/10 transition-all"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div class="p-6 border-t border-white/5">
+        <div class="flex items-center gap-3 px-2">
+          <div
+            class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            ></path>
-          </svg>
-          Logout
-        </button>
+            A
+          </div>
+          <div>
+            <p class="text-sm font-bold">Admin User</p>
+            <p class="text-[10px] text-zinc-500 font-black uppercase">
+              Pro Plan
+            </p>
+          </div>
+        </div>
       </div>
     </aside>
-
     <main class="flex-1 md:ml-64 p-4 md:p-10">
       <header class="flex justify-between items-center mb-10">
         <h2 id="section-title" class="text-xl font-bold">Dashboard Overview</h2>
