@@ -3,253 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petal Admin - Manager</title>
-    <link rel="stylesheet" href="../styles/output.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Petal Admin - Premium Monitoring</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #f4f4f5; overflow-x: hidden; }
-        .glass { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .table-glass { background: #09090b; border: 1px solid #18181b; }
-        .status-success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .status-pending { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
-        canvas { max-height: 40px !important; width: 100% !important; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body { 
+            background-color: #0a0a0a; 
+            color: white; 
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f0f0f; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+        
+        #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            color: #71717a; 
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-link:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            background-color: #16a34a !important; 
+            color: #ffffff !important;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+        }
     </style>
 </head>
-<body class="min-h-screen lg:flex">
+<body class="antialiased">
 
-    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[140] hidden"></div>
-
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 glass border-r border-white/5 z-[150] -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
-        <div class="p-8 flex items-center justify-between">
-            <h1 class="text-2xl font-black tracking-tighter italic">Petal <span class="text-green-500">Admin.</span></h1>
-            <button onclick="toggleSidebar()" class="lg:hidden p-2 text-zinc-500"><i data-lucide="x"></i></button>
-        </div>
-        
-        <nav class="flex-1 px-4 space-y-2">
-            <a href="./manager.html" class="sidebar-item bg-green-600 text-white flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm hover:bg-green-700 duration-200 transition">
-                <i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders
-            </a>
-            <a href="./customers.html" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition">
-                <i data-lucide="users" class="w-5 h-5"></i> Customers
-            </a>
-            <a href="./analytics.html" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-zinc-400 hover:bg-white/5 transition">
-                <i data-lucide="settings" class="w-5 h-5"></i> Analytics
-            </a>
-        </nav>
-
-        <div class="p-6 border-t border-white/5">
-            <div class="flex items-center gap-3 px-2">
-                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold">A</div>
+    <div class="flex min-h-screen relative">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0f0f0f] border-r border-gray-800 flex flex-col p-6 h-screen -translate-x-full lg:translate-x-0 lg:sticky lg:top-0">
+            <div class="flex items-center justify-between mb-12">
                 <div>
-                    <p class="text-sm font-bold">Admin User</p>
-                    <p class="text-[10px] text-zinc-500 font-black uppercase">Pro Plan</p>
+                    <h1 class="text-2xl font-black italic tracking-tighter">Petal <span class="text-green-500 font-bold uppercase not-italic">ADMIN.</span></h1>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1 font-semibold">Premium monitoring</p>
+                </div>
+                <button onclick="toggleSidebar()" class="lg:hidden text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <nav id="main-nav" class="flex-1 space-y-2 text-sm">
+                <a href="#" class="nav-link active group">
+                    <i data-lucide="layout-dashboard" class="mr-3 w-5 h-5"></i> Dashboard
+                </a>
+                <a href="orders.html" class="nav-link group">
+                    <i data-lucide="shopping-bag" class="mr-3 w-5 h-5 opacity-70"></i> Orders
+                </a>
+                <a href="customers.html" class="nav-link group">
+                    <i data-lucide="users" class="mr-3 w-5 h-5 opacity-70"></i> Customers
+                </a>
+                <a href="Analytics.html" class="nav-link group">
+                    <i data-lucide="bar-chart-3" class="mr-3 w-5 h-5 opacity-70"></i> Analytics
+                </a>
+            </nav>
+            
+            <div class="pt-6 border-t border-gray-800">
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] text-gray-600 uppercase flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></span>
+                        System Online
+                    </p>
+                    <button onclick="clearData()" class="text-[9px] text-red-900 hover:text-red-500 font-bold uppercase">Reset</button>
                 </div>
             </div>
-        </div>
-    </aside>
-    <div class="flex-1 lg:ml-64 w-full">
-        
-        <div class="lg:hidden flex items-center justify-between p-4 bg-black border-b border-white/10 sticky top-0 z-[60]">
-            <h1 class="text-xl font-black italic tracking-tighter">Petal <span class="text-green-500">Admin.</span></h1>
-            <button onclick="toggleSidebar()" class="p-2 bg-white/5 rounded-lg border border-white/10">
-                <i data-lucide="menu" class="w-6 h-6 text-green-500"></i>
-            </button>
-        </div>
+        </aside>
 
-        <main class="max-w-7xl mx-auto p-6 md:p-10">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div>
-                    <h1 class="text-3xl md:text-4xl font-black tracking-tighter italic">System <span class="text-green-500">Overview.</span></h1>
-                    <p class="text-zinc-500 mt-1">Premium monitoring for your commerce vibe.</p>
-                </div>
-                <div class="flex flex-wrap gap-3 w-full md:w-auto">
-                    <div class="relative flex-1 md:w-80">
-                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4"></i>
-                        <input type="text" id="orderSearch" placeholder="Search customer..." class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm transition">
-                    </div>
-                    <button onclick="openModal()" class="bg-green-500 text-black px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-green-400 transition flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Create
-                    </button>
-                </div>
+        <main class="flex-1 min-w-0 p-4 md:p-8">
+            <div class="flex items-center justify-between lg:hidden mb-6">
+                <button onclick="toggleSidebar()" class="p-2 bg-[#141414] rounded-lg border border-gray-800">
+                    <i data-lucide="menu" class="w-6 h-6 text-green-500"></i>
+                </button>
+                <h1 class="text-xl font-black italic tracking-tighter">Petal <span class="text-green-500 not-italic">ADMIN.</span></h1>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-                <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-44">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Orders</p>
-                            <h3 class="text-2xl font-bold">2,543</h3>
-                        </div>
-                        <div class="text-green-500 text-xs font-bold">+12%</div>
-                    </div>
-                    <div class="mt-4"><canvas id="chart1"></canvas></div>
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                <div class="relative w-full max-w-md">
+                    <span class="absolute inset-y-0 left-4 flex items-center text-gray-500">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                    </span>
+                    <input 
+                        type="text" id="customer-search" oninput="handleSearch()"
+                        placeholder="Search customer..." 
+                        class="w-full bg-[#141414] border border-gray-800 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-green-500 transition-all text-sm placeholder-gray-600"
+                    />
                 </div>
-                <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-44">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Revenue</p>
-                            <h3 class="text-2xl font-bold">$42.8k</h3>
-                        </div>
-                        <div class="text-green-500 text-xs font-bold">+8%</div>
-                    </div>
-                    <div class="mt-4"><canvas id="chart2"></canvas></div>
-                </div>
-                <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-44">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Returns</p>
-                            <h3 class="text-2xl font-bold">14</h3>
-                        </div>
-                        <div class="text-red-500 text-xs font-bold">-2%</div>
-                    </div>
-                    <div class="mt-4"><canvas id="chart3"></canvas></div>
-                </div>
-                <div class="glass p-6 rounded-[2rem] flex flex-col justify-between h-44">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Active</p>
-                            <h3 class="text-2xl font-bold">892</h3>
-                        </div>
-                        <div class="text-green-500 text-xs font-bold">+24%</div>
-                    </div>
-                    <div class="mt-4"><canvas id="chart4"></canvas></div>
-                </div>
-            </div>
+                <button onclick="addNewOrder()" class="bg-green-500 text-black px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-green-400 transition-all flex items-center">
+                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> New Entry
+                </button>
+            </header>
 
-            <div class="table-glass rounded-[2rem] overflow-hidden shadow-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10" id="trend-cards"></div>
+
+            <div class="bg-[#0f0f0f] rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left" id="orderTable">
-                        <thead>
-                            <tr class="border-b border-white/5 bg-white/5">
-                                <th class="px-6 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Order</th>
-                                <th class="px-6 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Customer</th>
-                                <th class="px-6 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Status</th>
-                                <th class="px-6 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Total</th>
-                                <th class="px-6 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] text-right">Actions</th>
+                    <table class="w-full text-left text-sm min-w-[600px]">
+                        <thead class="text-gray-500 uppercase text-[10px] tracking-widest border-b border-gray-800 bg-[#141414]">
+                            <tr>
+                                <th class="px-8 py-5 font-semibold">Order ID</th>
+                                <th class="px-8 py-5 font-semibold">Customer</th>
+                                <th class="px-8 py-5 font-semibold text-center">Status</th>
+                                <th class="px-8 py-5 font-semibold">Total</th>
+                                <th class="px-8 py-5 text-right font-semibold">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-white/5" id="tableBody"></tbody>
+                        <tbody id="order-table-body" class="divide-y divide-gray-800/50"></tbody>
                     </table>
                 </div>
             </div>
         </main>
-    </div>
-
-    <div id="createModal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="glass w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl">
-            <h2 class="text-2xl font-black mb-6 italic uppercase tracking-tighter">New <span class="text-green-500">Order</span></h2>
-            <div class="space-y-4">
-                <input type="text" id="custName" placeholder="Customer Name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500 text-white">
-                <input type="number" id="orderTotal" placeholder="Total Amount ($)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500 text-white">
-                <div class="flex gap-3 pt-4">
-                    <button onclick="closeModal()" class="flex-1 px-4 py-3 rounded-xl border border-white/10 font-bold hover:bg-white/5 transition">Cancel</button>
-                    <button onclick="addNewOrder()" class="flex-1 px-4 py-3 rounded-xl bg-green-500 text-black font-black uppercase tracking-widest hover:bg-green-400">Save</button>
-                </div>
-            </div>
-        </div>
+        
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden"></div>
     </div>
 
     <script>
-        // Sidebar Toggle Logic
-        let isSidebarOpen = false;
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            isSidebarOpen = !isSidebarOpen;
-            
-            if (isSidebarOpen) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
-        }
-
-        // Initialize Lucide
-        lucide.createIcons();
-
-        // Data Management
-        const STORAGE_KEY = 'petal_admin_orders';
-        const defaultOrders = [
-            { id: '#1002', name: 'Wade Warren', status: 'Pending', total: '$20.00' },
-            { id: '#1004', name: 'Esther Howard', status: 'Success', total: '$22.00' },
-            { id: '#1007', name: 'Jenny Wilson', status: 'Pending', total: '$45.00' }
+        // --- DATA LOGIC ---
+        const initialData = [
+            { id: "#1002", name: "Wade Warren", status: "Pending", total: 20.00 },
+            { id: "#1004", name: "Esther Howard", status: "Success", total: 22.00 },
+            { id: "#1007", name: "Jenny Wilson", status: "Pending", total: 45.00 },
+            { id: "#1009", name: "Guy Hawkins", status: "Success", total: 120.00 }
         ];
 
-        let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultOrders;
+        const getOrders = () => JSON.parse(localStorage.getItem('petalOrders')) || initialData;
+        const saveOrders = (orders) => localStorage.setItem('petalOrders', JSON.stringify(orders));
 
-        function syncStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-        }
+        // --- UI RENDERING ---
+        function renderDashboard(filterQuery = "") {
+            const orders = getOrders();
+            const filtered = orders.filter(o => o.name.toLowerCase().includes(filterQuery.toLowerCase()));
 
-        function renderTable() {
-            const body = document.getElementById('tableBody');
-            body.innerHTML = orders.map(o => `
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                    <td class="px-6 py-4 font-bold text-zinc-400 text-sm">${o.id}</td>
-                    <td class="px-6 py-4 font-semibold text-sm">${o.name}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${o.status === 'Success' ? 'status-success' : 'status-pending'}">
-                            ${o.status}
-                        </span>
+            const totalRev = filtered.reduce((sum, o) => sum + o.total, 0);
+            const pendingCount = filtered.filter(o => o.status === "Pending").length;
+
+            document.getElementById('trend-cards').innerHTML = `
+                ${createTrendCard("Total Orders", filtered.length, "+12%", "green", "shopping-cart", "chart-orders")}
+                ${createTrendCard("Revenue", `$${totalRev.toFixed(2)}`, "+8%", "green", "dollar-sign", "chart-revenue")}
+                ${createTrendCard("Pending", pendingCount, "Active", "orange", "clock", "chart-pending")}
+                ${createTrendCard("Active Users", filtered.length, "+24%", "green", "users", "chart-users")}
+            `;
+
+            // Initialize sparklines for each card
+            initSparkline("chart-orders", [10, 15, 8, 20, 18, 25, filtered.length], '#22c55e');
+            initSparkline("chart-revenue", [200, 450, 300, 600, 400, 700, totalRev], '#22c55e');
+            initSparkline("chart-pending", [2, 5, 3, 6, 2, 4, pendingCount], '#fb923c');
+            initSparkline("chart-users", [50, 80, 60, 100, 90, 120, 110], '#22c55e');
+
+            const tableBody = document.getElementById('order-table-body');
+            tableBody.innerHTML = filtered.map(order => `
+                <tr class="hover:bg-white/[0.02] transition-colors group">
+                    <td class="px-8 py-5 text-gray-500 font-mono text-[13px]">${order.id}</td>
+                    <td class="px-8 py-5 font-bold text-gray-100">${order.name}</td>
+                    <td class="px-8 py-5 text-center">
+                        <button onclick="toggleStatus('${order.id}')" class="px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter transition-all hover:scale-105 ${order.status === 'Success' ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-400'}">
+                            ${order.status}
+                        </button>
                     </td>
-                    <td class="px-6 py-4 font-bold text-green-500 text-sm tracking-tighter">${o.total}</td>
-                    <td class="px-6 py-4 text-right space-x-2">
-                        ${o.status === 'Pending' ? `<button onclick="makePay('${o.id}')" class="p-2 text-zinc-400 hover:text-green-500"><i data-lucide="credit-card" class="w-4 h-4"></i></button>` : ''}
-                        <button onclick="delOrder('${o.id}')" class="p-2 text-zinc-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <td class="px-8 py-5 font-bold text-green-400">$${order.total.toFixed(2)}</td>
+                    <td class="px-8 py-5 text-right">
+                        <div class="flex justify-end gap-2">
+                            <button onclick="editRow('${order.id}')" class="p-2 text-gray-500 hover:text-white transition-colors bg-white/5 rounded-lg" title="Edit">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteRow('${order.id}')" class="p-2 text-gray-500 hover:text-red-500 transition-colors bg-white/5 rounded-lg" title="Delete">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
+            
             lucide.createIcons();
         }
 
-        // Modal Controls
-        window.openModal = () => document.getElementById('createModal').classList.remove('hidden');
-        window.closeModal = () => document.getElementById('createModal').classList.add('hidden');
+        function createTrendCard(title, value, perc, color, icon, chartId) {
+            const colorClass = color === 'green' ? 'text-green-500' : (color === 'orange' ? 'text-orange-400' : 'text-red-500');
+            return `
+                <div class="bg-[#111111] p-5 rounded-[2rem] border border-gray-800 flex flex-col justify-between h-48 shadow-lg hover:border-gray-700 transition-all group">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2 bg-white/5 rounded-xl"><i data-lucide="${icon}" class="w-4 h-4 ${colorClass}"></i></div>
+                        <span class="text-[10px] font-bold ${colorClass} bg-white/5 px-2 py-1 rounded-lg">${perc}</span>
+                    </div>
+                    
+                    <div class="h-10 w-full mt-2">
+                        <canvas id="${chartId}"></canvas>
+                    </div>
 
-        window.addNewOrder = () => {
-            const name = document.getElementById('custName').value;
-            const total = document.getElementById('orderTotal').value;
-            if(!name || !total) return alert("Please fill all fields");
-            
-            orders.unshift({ 
-                id: `#${Math.floor(1000 + Math.random() * 9000)}`, 
-                name, 
-                status: 'Pending', 
-                total: `$${parseFloat(total).toFixed(2)}` 
+                    <div>
+                        <p class="text-[10px] uppercase text-gray-500 font-bold tracking-widest mt-2">${title}</p>
+                        <h3 class="text-3xl font-bold tracking-tighter">${value}</h3>
+                    </div>
+                </div>`;
+        }
+
+        function initSparkline(canvasId, dataPoints, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataPoints.map((_, i) => i),
+                    datasets: [{
+                        data: dataPoints,
+                        borderColor: color,
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false } }
+                }
             });
+        }
 
-            syncStorage(); 
-            renderTable();
-            closeModal();
-            document.getElementById('custName').value = '';
-            document.getElementById('orderTotal').value = '';
+        // --- ACTIONS ---
+        function addNewOrder() {
+            const name = prompt("Enter Customer Name:");
+            if (name) {
+                const amount = prompt("Enter Total Amount:", "50.00");
+                const orders = getOrders();
+                const newId = "#" + (1000 + orders.length + 1);
+                orders.push({ id: newId, name: name, status: "Success", total: parseFloat(amount) || 0 });
+                saveOrders(orders);
+                renderDashboard();
+            }
+        }
+
+        function editRow(id) {
+            const orders = getOrders();
+            const index = orders.findIndex(o => o.id === id);
+            const newName = prompt("Update Customer Name:", orders[index].name);
+            if (newName) {
+                orders[index].name = newName;
+                saveOrders(orders);
+                renderDashboard();
+            }
+        }
+
+        function deleteRow(id) {
+            if (confirm(`Are you sure you want to delete order ${id}?`)) {
+                const orders = getOrders().filter(o => o.id !== id);
+                saveOrders(orders);
+                renderDashboard();
+            }
+        }
+
+        function toggleStatus(id) {
+            const orders = getOrders();
+            const index = orders.findIndex(o => o.id === id);
+            orders[index].status = orders[index].status === "Success" ? "Pending" : "Success";
+            saveOrders(orders);
+            renderDashboard();
+        }
+
+        function handleSearch() {
+            renderDashboard(document.getElementById('customer-search').value);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        function clearData() {
+            if(confirm("Clear all data and reset?")) {
+                localStorage.removeItem('petalOrders');
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (!localStorage.getItem('petalOrders')) saveOrders(initialData);
+            renderDashboard();
         };
-
-        window.makePay = (id) => {
-            const order = orders.find(o => o.id === id);
-            if (order) { order.status = 'Success'; syncStorage(); renderTable(); }
-        };
-
-        window.delOrder = (id) => {
-            if(confirm("Delete this record?")) { orders = orders.filter(o => o.id !== id); syncStorage(); renderTable(); }
-        };
-
-        // Charts initialization
-        const chartConfigs = {
-            type: 'line',
-            data: { labels: [1,2,3,4,5], datasets: [{ data: [10, 25, 15, 30, 40], borderColor: '#22c55e', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4 }]},
-            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false }
-        };
-
-        new Chart(document.getElementById('chart1'), chartConfigs);
-        new Chart(document.getElementById('chart2'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], data: [5, 40, 20, 80]}]}});
-        new Chart(document.getElementById('chart3'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], borderColor: '#ef4444', data: [80, 40, 20]}]}});
-        new Chart(document.getElementById('chart4'), {...chartConfigs, data: { ...chartConfigs.data, datasets: [{...chartConfigs.data.datasets[0], data: [20, 70, 90]}]}});
-
-        renderTable();
     </script>
 </body>
 </html>
